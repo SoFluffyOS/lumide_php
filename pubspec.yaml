@@ -1,0 +1,23 @@
+name: lumide_php
+description: "PHP language support and development tools for Lumide IDE"
+version: 1.0.0
+homepage: https://lumide.dev
+repository: https://github.com/SoFluffyOS/lumide_php
+
+topics:
+  - lumide-languages
+  - lumide-plugin
+
+executables:
+  lumide_php: main
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  lumide_api: 1.10.0
+  path: ^1.9.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

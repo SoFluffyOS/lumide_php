@@ -1,0 +1,199 @@
+id: lumide_php
+name: 'PHP'
+description: 'PHP language support (Intelephense, Phpactor) and development tools (Composer, PHPUnit, Built-in Server) for Lumide IDE.'
+entry_point: 'bin/main.dart'
+
+activation_events:
+  - 'workspaceContains:composer.json'
+  - 'workspaceContains:composer.lock'
+  - 'workspaceContains:phpunit.xml'
+  - 'workspaceContains:phpunit.xml.dist'
+  - 'workspaceContains:*.php'
+  - 'workspaceContains:*.phtml'
+  - 'onCommand:php.toolsMenu'
+  - 'onCommand:php.restartLsp'
+  - 'onCommand:php.selectLsp'
+  - 'onCommand:php.installIntelephense'
+  - 'onCommand:php.installPhpactor'
+  - 'onCommand:php.lintFile'
+  - 'onCommand:php.formatFile'
+  - 'onCommand:php.server.start'
+  - 'onCommand:php.server.stop'
+  - 'onCommand:php.server.restart'
+  - 'onCommand:php.server.openBrowser'
+  - 'onCommand:php.stop'
+  - 'onCommand:php.test.runAll'
+  - 'onCommand:php.newFile'
+  - 'onCommand:php.runFile'
+  - 'onCommand:php.test.runActiveFile'
+  - 'onCommand:composer.install'
+  - 'onCommand:composer.update'
+  - 'onCommand:composer.dumpAutoload'
+  - 'onCommand:composer.validate'
+  - 'onCommand:composer.requirePackage'
+  - 'onCommand:composer.runScript'
+
+permissions:
+  - network:
+      - github.com
+      - objects.githubusercontent.com
+  - fileSystem:
+      - '${workspace}/**'
+      - '${home}/.local/bin/**'
+  - shell:
+      - php
+      - intelephense
+      - phpactor
+      - ~/.local/bin/phpactor
+      - /usr/local/bin/phpactor
+      - /opt/homebrew/bin/phpactor
+      - php-language-server
+      - composer
+      - npm
+      - node
+      - npx
+      - vendor/bin/phpunit
+      - phpunit
+      - vendor/bin/pest
+      - pest
+      - vendor/bin/pint
+      - pint
+      - vendor/bin/php-cs-fixer
+      - php-cs-fixer
+      - which
+      - where
+      - open
+      - chmod
+      - curl
+      - mkdir
+
+configuration:
+  - key: php.lsp.server
+    type: string
+    default: 'auto'
+    enum:
+      - auto
+      - intelephense
+      - phpactor
+      - php-language-server
+      - custom
+    title: 'PHP Language Server Engine'
+    description: 'Select LSP server: auto (detects Intelephense or Phpactor), intelephense, phpactor, php-language-server, or custom.'
+  - key: php.lsp.path
+    type: filePath
+    title: 'Custom LSP Executable Path'
+    description: 'Path to custom LSP executable. If empty, the default server executable from PATH is used.'
+  - key: php.executablePath
+    type: filePath
+    title: 'PHP Executable Path'
+    description: 'Path to the php binary. If empty, the system PATH is used.'
+  - key: php.composer.path
+    type: filePath
+    title: 'Composer Executable Path'
+    description: 'Path to the composer binary. If empty, the system PATH is used.'
+  - key: php.devServer.host
+    type: string
+    default: '127.0.0.1'
+    title: 'Built-in Server Host'
+    description: 'Host address for the PHP built-in web server.'
+  - key: php.devServer.port
+    type: number
+    default: 8000
+    title: 'Built-in Server Port'
+    description: 'Port for the PHP built-in web server.'
+  - key: php.devServer.documentRoot
+    type: string
+    default: ''
+    title: 'Built-in Server Document Root'
+    description: 'Document root folder for PHP built-in web server (e.g. public, web, or empty for workspace root).'
+  - key: php.intelephense.licenceKey
+    type: string
+    default: ''
+    title: 'Intelephense Licence Key'
+    description: 'Optional premium licence key for Intelephense.'
+
+contributes:
+  launchProviders:
+    - id: php
+      title: 'PHP'
+      workspacePatterns:
+        - composer.json
+        - phpunit.xml
+        - phpunit.xml.dist
+        - '*.php'
+        - '*.phtml'
+      kinds:
+        - run
+        - test
+      defaultKinds:
+        - run
+        - test
+      icon: 'play'
+      priority: 90
+  commands:
+    - id: php.toolsMenu
+      title: 'PHP: Tools & Language Server Menu'
+      category: 'PHP'
+    - id: php.installIntelephense
+      title: 'PHP: Install Intelephense Language Server (npm)'
+      category: 'PHP'
+    - id: php.installPhpactor
+      title: 'PHP: Install Phpactor Language Server (Standalone PHAR)'
+      category: 'PHP'
+    - id: php.restartLsp
+      title: 'PHP: Restart Language Server'
+      category: 'PHP'
+    - id: php.selectLsp
+      title: 'PHP: Select Language Server'
+      category: 'PHP'
+    - id: php.lintFile
+      title: 'PHP: Lint Active File (php -l)'
+      category: 'PHP'
+    - id: php.formatFile
+      title: 'PHP: Format Active File (Pint / PHP-CS-Fixer)'
+      category: 'PHP'
+    - id: php.server.start
+      title: 'PHP: Start Built-in Web Server'
+      category: 'PHP'
+    - id: php.server.stop
+      title: 'PHP: Stop Built-in Web Server'
+      category: 'PHP'
+    - id: php.server.restart
+      title: 'PHP: Restart Built-in Web Server'
+      category: 'PHP'
+    - id: php.server.openBrowser
+      title: 'PHP: Open Server in Browser'
+      category: 'PHP'
+    - id: php.stop
+      title: 'PHP: Stop Running Process'
+      category: 'PHP'
+    - id: php.test.runAll
+      title: 'PHP: Run All Tests (PHPUnit / Pest)'
+      category: 'PHP'
+    - id: php.newFile
+      title: 'PHP: New PHP File'
+      category: 'PHP'
+    - id: php.runFile
+      title: 'PHP: Run PHP File'
+      category: 'PHP'
+    - id: php.test.runActiveFile
+      title: 'PHP: Run Current Test File'
+      category: 'PHP'
+    - id: composer.install
+      title: 'Composer: Install'
+      category: 'Composer'
+    - id: composer.update
+      title: 'Composer: Update'
+      category: 'Composer'
+    - id: composer.dumpAutoload
+      title: 'Composer: Dump Autoload'
+      category: 'Composer'
+    - id: composer.validate
+      title: 'Composer: Validate composer.json'
+      category: 'Composer'
+    - id: composer.requirePackage
+      title: 'Composer: Require Package'
+      category: 'Composer'
+    - id: composer.runScript
+      title: 'Composer: Run Script...'
+      category: 'Composer'
