@@ -32,7 +32,7 @@ class PhpStatusBarService {
     );
   }
 
-  /// Updates the PHP version and active LSP in the status bar tooltip.
+  /// Updates the PHP version and registered servers in the status bar tooltip.
   Future<void> updatePhpStatus({
     String? phpVersion,
     String? lspEngine,

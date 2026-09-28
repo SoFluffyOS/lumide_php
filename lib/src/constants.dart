@@ -45,6 +45,7 @@ const configIntelephenseLicence = 'php.intelephense.licenceKey';
 
 // Commands
 const cmdPhpToolsMenu = 'php.toolsMenu';
+// Existing command IDs now expose status and discovery; Lumide owns lifecycle controls.
 const cmdPhpRestartLsp = 'php.restartLsp';
 const cmdPhpSelectLsp = 'php.selectLsp';
 const cmdPhpInstallIntelephense = 'php.installIntelephense';

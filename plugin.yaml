@@ -77,12 +77,12 @@ configuration:
       - phpactor
       - php-language-server
       - custom
-    title: 'PHP Language Server Engine'
-    description: 'Select LSP server: auto (detects Intelephense or Phpactor), intelephense, phpactor, php-language-server, or custom.'
+    title: 'Preferred PHP Language Server'
+    description: 'Register all discovered servers, with this server first. Auto prefers Intelephense, then Phpactor. Manage enabled servers in Lumide’s LSP & Agents panel. Reload the PHP plugin after changing this preference.'
   - key: php.lsp.path
     type: filePath
     title: 'Custom LSP Executable Path'
-    description: 'Path to custom LSP executable. If empty, the default server executable from PATH is used.'
+    description: 'Additional custom PHP server executable, launched with --stdio. Reload the PHP plugin after changing this path.'
   - key: php.executablePath
     type: filePath
     title: 'PHP Executable Path'
@@ -141,10 +141,10 @@ contributes:
       title: 'PHP: Install Phpactor Language Server (Standalone PHAR)'
       category: 'PHP'
     - id: php.restartLsp
-      title: 'PHP: Restart Language Server'
+      title: 'PHP: Language Server Status'
       category: 'PHP'
     - id: php.selectLsp
-      title: 'PHP: Select Language Server'
+      title: 'PHP: Discover Language Servers'
       category: 'PHP'
     - id: php.lintFile
       title: 'PHP: Lint Active File (php -l)'

@@ -94,8 +94,22 @@ Connects seamlessly with PHP Language Servers for rich IDE features (completions
 - **Phpactor** (`phpactor language-server`) — Powerful PHP-native language server and refactoring toolkit.
 - **PHP Language Server** (`php-language-server`) — Pure PHP language server.
 - **Custom Executable** — Use your own custom PHP language server binary or path.
-- **Auto-Detection** — Automatically finds installed LSP servers in PATH.
-- **Switch Engine on the Fly** (`PHP: Select Language Server`).
+- **Multiple servers** — Registers each discovered server, including a custom executable.
+- **Discovery** — Finds servers on PATH and Phpactor in plugin storage or Composer locations. `PHP: Discover Language Servers` adds new servers.
+- **Controls** — Start, restart, stop, disable, or enable servers in Lumide’s **LSP & Agents** panel.
+
+Requires Lumide multi-server and workspace controls. The plugin shows registration status; Lumide shows each server’s runtime state.
+
+Default order: Intelephense, Phpactor, PHP Language Server, then custom. Set `php.lsp.server` to choose the first. Lumide combines supported results and uses the first capable server for formatting and rename. Duplicate commands register once.
+
+Install commands add servers without replacing others or clearing disabled choices.
+
+The existing command IDs are retained for keybindings:
+
+| Command ID | Current title | Behavior |
+|---|---|---|
+| `php.selectLsp` | PHP: Discover Language Servers | Discovers and registers additional installed servers |
+| `php.restartLsp` | PHP: Language Server Status | Lists registered servers and directs you to Lumide’s lifecycle controls |
 
 ### 📦 Composer Integration
 - `Composer: Install` — Run `composer install` in an integrated terminal.
@@ -126,8 +140,8 @@ Connects seamlessly with PHP Language Servers for rich IDE features (completions
 
 | Setting | Type | Default | Description |
 |---|---|---|---|
-| `php.lsp.server` | `string` | `"auto"` | LSP engine: `auto`, `intelephense`, `phpactor`, `php-language-server`, or `custom` |
-| `php.lsp.path` | `filePath` | `""` | Custom LSP executable path |
+| `php.lsp.server` | `string` | `"auto"` | First server to register: `auto`, `intelephense`, `phpactor`, `php-language-server`, or `custom`; all found servers register |
+| `php.lsp.path` | `filePath` | `""` | Custom server executable (launched with `--stdio`) |
 | `php.executablePath` | `filePath` | `""` | Path to `php` binary |
 | `php.composer.path` | `filePath` | `""` | Path to `composer` binary |
 | `php.devServer.host` | `string` | `"127.0.0.1"` | Host address for built-in web server |
@@ -137,7 +151,9 @@ Connects seamlessly with PHP Language Servers for rich IDE features (completions
 
 ---
 
+Reload the PHP plugin after changing the preferred server, custom path, or licence key. Manage runtime state in **LSP & Agents**.
+
 ## Getting Started
 
 1. Open any workspace containing PHP files (`.php`) or `composer.json` in Lumide IDE.
-2. The PHP plugin activates automatically. Click the PHP logo icon in the bottom right status bar to open the **PHP Tools Menu** or switch language server engines.
+2. The plugin activates automatically. Use the PHP status bar menu to discover servers, then manage them in **LSP & Agents**.

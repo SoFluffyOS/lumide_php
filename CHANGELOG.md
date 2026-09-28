@@ -2,6 +2,19 @@
 
 All notable changes to the `lumide_php` plugin will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Register every installed PHP server independently; manage each in Lumide’s LSP & Agents panel.
+- Discover new servers without duplicating registrations.
+- Map PHP and Blade files to the `php` language ID with SDK 1.11.0.
+
+### Changed
+- `php.lsp.server` sets registration order; all discovered servers remain available.
+- Custom servers coexist with built-ins; duplicate commands register once.
+- Replace switch/restart actions with discovery/status; keep command IDs for keybindings.
+- Show registered servers in the status tooltip and send licence keys only to Intelephense.
+
 ## [1.0.0] - 2026-08-18
 
 ### Added

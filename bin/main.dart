@@ -57,15 +57,13 @@ class PhpPlugin extends LumidePlugin {
       launchService.init(),
     ]);
 
-    // 4. Register LSP Language Server
+    // 4. Discover and register installed PHP language servers
     await lspService.init();
 
     // 5. Update Status Bar with PHP info
     await statusBarService.updatePhpStatus(
       phpVersion: phpService.phpVersion,
-      lspEngine: lspService.isRegistered
-          ? lspService.activeServerType.label
-          : 'No LSP',
+      lspEngine: lspService.registeredSummary,
     );
 
     // 6. Register Commands
@@ -101,9 +99,7 @@ class PhpPlugin extends LumidePlugin {
         await lspService.installIntelephense();
         await statusBarService.updatePhpStatus(
           phpVersion: phpService.phpVersion,
-          lspEngine: lspService.isRegistered
-              ? lspService.activeServerType.label
-              : 'No LSP',
+          lspEngine: lspService.registeredSummary,
         );
       },
     );
@@ -116,31 +112,27 @@ class PhpPlugin extends LumidePlugin {
         await lspService.installPhpactor();
         await statusBarService.updatePhpStatus(
           phpVersion: phpService.phpVersion,
-          lspEngine: lspService.isRegistered
-              ? lspService.activeServerType.label
-              : 'No LSP',
+          lspEngine: lspService.registeredSummary,
         );
       },
     );
 
     await context.commands.registerCommand(
       id: cmdPhpRestartLsp,
-      title: 'PHP: Restart Language Server',
+      title: 'PHP: Language Server Status',
       category: pluginName,
-      callback: ([args]) async => lspService.restartLsp(),
+      callback: ([args]) async => lspService.showStatus(),
     );
 
     await context.commands.registerCommand(
       id: cmdPhpSelectLsp,
-      title: 'PHP: Select Language Server',
+      title: 'PHP: Discover Language Servers',
       category: pluginName,
       callback: ([args]) async {
-        await lspService.selectLsp(args);
+        await lspService.refreshServers();
         await statusBarService.updatePhpStatus(
           phpVersion: phpService.phpVersion,
-          lspEngine: lspService.isRegistered
-              ? lspService.activeServerType.label
-              : 'No LSP',
+          lspEngine: lspService.registeredSummary,
         );
       },
     );
@@ -449,15 +441,14 @@ class PhpPlugin extends LumidePlugin {
       }
     }
 
-    final lspLabel =
-        lspService.isRegistered ? lspService.activeServerType.label : 'No LSP';
+    final lspLabel = lspService.registeredSummary;
     final versionHeader = switch (phpService.phpVersion) {
       final v? => '$v ($lspLabel)',
       _ => 'PHP: Not Detected ($lspLabel)',
     };
 
     final items = [
-      // Top Header: PHP Version & LSP Engine
+      // Top Header: PHP Version & Registered Servers
       QuickPickItem(
         label: versionHeader,
         enabled: false,
@@ -469,7 +460,7 @@ class PhpPlugin extends LumidePlugin {
         isSeparator: true,
       ),
       const QuickPickItem(
-        label: 'Language server',
+        label: 'Language servers',
         enabled: false,
       ),
       const QuickPickItem(
@@ -485,14 +476,14 @@ class PhpPlugin extends LumidePlugin {
         payload: 'install_phpactor',
       ),
       const QuickPickItem(
-        label: 'Switch Language Server',
-        tooltip: 'Select active PHP language server engine',
+        label: 'Discover Language Servers',
+        tooltip: 'Register newly installed PHP language servers',
         icon: iconSwitch,
         payload: 'select_lsp',
       ),
       const QuickPickItem(
-        label: 'Restart Language Server',
-        tooltip: 'Restart active PHP language server',
+        label: 'Language Server Status',
+        tooltip: 'View registered servers and how to manage them in Lumide',
         icon: iconRefresh,
         payload: 'restart_lsp',
       ),
@@ -575,28 +566,22 @@ class PhpPlugin extends LumidePlugin {
         await lspService.installIntelephense();
         await statusBarService.updatePhpStatus(
           phpVersion: phpService.phpVersion,
-          lspEngine: lspService.isRegistered
-              ? lspService.activeServerType.label
-              : 'No LSP',
+          lspEngine: lspService.registeredSummary,
         );
       case 'install_phpactor':
         await lspService.installPhpactor();
         await statusBarService.updatePhpStatus(
           phpVersion: phpService.phpVersion,
-          lspEngine: lspService.isRegistered
-              ? lspService.activeServerType.label
-              : 'No LSP',
+          lspEngine: lspService.registeredSummary,
         );
       case 'select_lsp':
-        await lspService.selectLsp(args);
+        await lspService.refreshServers();
         await statusBarService.updatePhpStatus(
           phpVersion: phpService.phpVersion,
-          lspEngine: lspService.isRegistered
-              ? lspService.activeServerType.label
-              : 'No LSP',
+          lspEngine: lspService.registeredSummary,
         );
       case 'restart_lsp':
-        await lspService.restartLsp();
+        await lspService.showStatus();
       case 'composer_install':
         await composerService.install();
       case 'composer_update':
